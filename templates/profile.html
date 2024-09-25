@@ -1,0 +1,220 @@
+{% extends "layout.html" %}
+
+{% block topbar %}
+<nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="{{ url_for('index') }}" style="color: #ecf0f1; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 30px;">YOUR ANIME LIST</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color: #ecf0f1;"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            {% if user_id %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout_mal') }}">Logout from MAL</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('rate') }}">Search Animes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('guide') }}">Guide</a>
+                </li>
+                <li>
+                    <div class="form-check" style="padding: 8px; margin-left: 25px;">
+                        <input class="form-check-input" type="checkbox" id="include-hentai">
+                        <label class="form-check-label" for="include-hentai">Include NSFW</label>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>   
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout_mal') }}">Logout MAL</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('rate') }}">Search Animes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('guide') }}">Guide</a>
+                </li>
+                <li>
+                    <div class="form-check mr-sm-2" style="padding: 8px; margin-left: 25px;">
+                        <input class="form-check-input" type="checkbox" id="include-hentai">
+                        <label class="form-check-label" for="include-hentai">Include NSFW</label>
+                    </div>
+                </li>
+
+            {% endif %}
+            </ul>
+            <li class="nav-item-your-id">
+            <span class="navbar-text">Your ID: {{ user_id }}</span>
+        </li>
+        {% if user_id %}
+        <form class="form-inline my-2 my-lg-0" action="{{ url_for('profile') }}" method="POST">
+            <input type="text" name="user_ids" id="search-bar" class="form-control mr-sm-2" placeholder="Enter up to 10 User IDs" maxlength="100" required style="border-radius: 20px;">
+            <button id="search-button" type="submit">Merge Users</button>
+        </form>
+        {% endif %}
+    </div>  
+</nav>
+{% endblock %}
+
+{% block sidebar %}
+<aside class="sidebar">
+
+    <h2><strong>Statistics</strong></h2>
+    {% if user_data %}
+        <p><strong>Name:</strong> {{ user_data.name }}</p>
+        <p><strong>Animes Completed:</strong> {{ user_data.anime_statistics.num_items_completed }}</p> 
+        <p><strong>Episodes Watched:</strong> {{ user_data.anime_statistics.num_episodes }}</p>
+        <p><strong>Days Wasted:</strong> {{ user_data.anime_statistics.num_days_watched }} Days</p>
+
+
+        {% if stats %}
+            <h4>Most Watched Genres</h4>
+            <table class="table table-striped">
+                <thead> 
+                    <tr>
+                        <th>Genre</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for genre, count in stats.genres %}
+                    <tr>
+                        <td>{{ genre }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h4>Most Watched Themes</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Theme</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for theme, count in stats.themes %}
+                    <tr>
+                        <td>{{ theme }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No statistics available.</p>
+        {% endif %}
+    {% else %}
+        <p>No user data available.</p>
+    {% endif %}
+</aside>
+{% endblock %}
+
+{% block main %}
+<div class="form-container">
+    <div class="left-forms">
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="spinner"></div>
+        </div> 
+        <form action="{{ url_for('profile') }}" method="post" class="select-form">
+            <input type="text" name="select" min="1" max="1200" placeholder="Enter Anime IDs" style="width: 180px;" required>
+            <button type="submit">Merge Animes</button>
+        </form>
+        <form action="{{ url_for('profile') }}" method="post" class="limit-form">
+            <input type="number" id="limit" name="limit" min="1" max="1000" value="20" required>
+            <button type="submit">Limit</button>
+        </form>
+    </div>
+    <form action="{{ url_for('profile') }}" method="post" class="update-form">
+        <input type="hidden" name="update" value="update">
+        <button type="submit">Update</button>
+    </form>
+</div>
+    
+<div id="anime-container">
+    <h2>Anime Recommendations</h2>
+    {% if animes %}
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            {% for anime_id, anime in animes.items() %}
+                <div class="swiper-slide anime-card" data-anime-id="{{ anime_id }}">
+                    <a href="https://myanimelist.net/anime/{{ anime_id }}" target="_blank">
+                        <img src="{{ anime.image }}" alt="{{ anime.title }}" class="anime-image">
+                    </a>
+                    <div class="anime-info">
+                        <div class="anime-title">
+                            <h3>{{ anime.title }}</h3>
+                        </div>
+                        <ul class="anime-scores">
+                            <li><strong>Score:</strong> {{ anime.score }}</li>
+                            <li><strong>Year:</strong> {{ anime.year }}</li>
+                            <li><strong>Episodes:</strong> {{ anime.episodes }}</li>
+                            <li><strong>Studio:</strong> {{ anime.studio }}</li>
+                            <li><strong>Similarity:</strong> {{ "%.2f"|format(anime.similarity) }}</li>
+                        </ul>   
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="custom-swiper-navigation">
+        <button class="custom-swiper-button-prev">Previous</button>
+        <button class="custom-swiper-button-next">Next</button>
+    </div>
+    <div class="custom-swiper-pagination"></div>
+    {% else %}
+        <p id="no-recommendations">No recommendations available or not enough data.</p>
+    {% endif %}
+</div>
+
+<div id="movie-container">
+    <h2>Movie Recommendations</h2>
+    {% if movies %}
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            {% for movie_id, movie in movies.items() %}
+                <div class="swiper-slide movie-card" data-movie-id="{{ movie_id }}">
+                    <a href="https://myanimelist.net/anime/{{ movie_id }}" target="_blank">
+                        <img src="{{ movie.image }}" alt="{{ movie.title }}" class="movie-image">
+                    </a>
+                    <div class="movie-info">
+                        <div class="movie-title">
+                            <h3>{{ movie.title }}</h3>
+                        </div>
+                        <ul class="movie-scores">
+                            <li><strong>Score:</strong> {{ movie.score }}</li>
+                            <li><strong>Studio:</strong> {{ movie.studio }}</li>
+                            <li><strong>Similarity:</strong> {{ "%.2f"|format(movie.similarity) }}</li>
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="custom-swiper-navigation">
+        <button class="custom-swiper-button-prev">Previous</button>
+        <button class="custom-swiper-button-next">Next</button>
+    </div>
+    <div class="custom-swiper-pagination"></div>
+    {% else %}
+        <p id="no-recommendations">No recommendations available or not enough data.</p>
+    {% endif %}
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+{% endblock %}
+

@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block topbar %}
+<nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="{{ url_for('index') }}" style="color: #ecf0f1; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 30px;">YOUR ANIME LIST</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color: #ecf0f1;"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Go Back</a>
+            </li>
+            <div id="loading-overlay" class="loading-overlay">
+                <div class="spinner"></div>
+            </div> 
+        </ul>
+        <div class="form-check mr-sm-2">
+            <input class="form-check-input" type="checkbox" id="check-update">
+            <label class="form-check-label" for="check-update">Send updates to the top</label>
+        </div>
+        <div class="form-check mr-sm-2">
+            <input class="form-check-input" type="checkbox" id="check-anime-list">
+            <label class="form-check-label" for="check-anime-list">Exclude animes from your list</label>
+        </div>
+        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime...">
+        <button id="search-button" type="button">Search</button>
+    </div>  
+
+</nav>
+
+{% endblock %}  
+
+{% block main %}
+<div id="anime-container2">
+    <form id="rating-form-sidebar" action="{{ url_for('rate') }}" method="POST">
+        <button type="submit" class="submit-ratings">Submit Ratings</button>
+
+        {% if animes %}
+            {% for anime_id, anime in animes.items() %}
+                <div class="anime-card2" data-anime-id="{{ anime_id }}">
+                    <a href="https://myanimelist.net/anime/{{ anime_id }}" target="_blank">
+                        <img src="{{ anime.image }}" alt="{{ anime.title }}" class="anime-image">
+                    </a>
+                    <div class="anime-info">
+                        <div class="anime-title">
+                            <h3>{{ anime.title }}</h3>
+                        </div>
+                        <ul class="anime-scores">
+                            <li><strong>Score:</strong> {{ anime.score }}</li>
+                            <li><strong>Year:</strong> {{ anime.year }}</li>
+                            <li><strong>Episodes:</strong> {{ anime.episodes }}</li>
+                            <li><strong>Studio:</strong> {{ anime.studio }}</li>
+                        </ul>
+                    </div>
+                    <div class="rating-bar">
+                        <label for="rating-{{ anime_id }}"></label>
+                        <div class="rating-slider">
+                            <input type="range" id="rating-{{ anime_id }}" name="rating-{{ anime_id }}" min="0" max="10" step="1" value="0">
+                            <span class="rating-value" id="rating-value-{{ anime_id }}">0</span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="anime_ids" value="{{ anime_id }}">
+                </div>
+            {% endfor %}
+            <div class="pagination2">
+                <button id="prev-btn">Previous</button>
+                <button id="next-btn">Next</button>
+            </div>
+        {% else %}
+            <div class="no_animes">
+                <p>All your animes have been rated.</p>
+            </div>
+        {% endif %}
+    </form>
+</div> <!-- Closing #anime-container2 -->
+
+<div id="anime-container3">
+    <!-- Dynamic search results will be inserted here -->
+</div>
+
+<script src="{{ url_for('static', filename='search.js') }}"></script>
+<script src="{{ url_for('static', filename='add_anime.js') }}"></script>
+{% endblock %}
+
+

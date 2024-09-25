@@ -1,0 +1,353 @@
+{% extends "layout.html" %}
+
+{% block topbar %}
+<nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="{{ url_for('index') }}" style="color: #ecf0f1; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 30px;">YOUR ANIME LIST</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color: #ecf0f1;"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Go Back</a>
+            </li>
+        </ul>
+    </div>  
+</nav>
+{% endblock %}
+
+{% block sidebar %}
+<aside class="sidebar">
+    <h2 style="text-align: center; margin-right: 35px; font-weight: 600;">Contents</h2>  
+    <ul style=" padding: 0; margin: 0;">
+        <li><a href="#introduction">Introduction</a></li>
+        <ul style="padding-left: 20px; margin: 0;">
+            <li><a href="#recommendations-page">Recommendations Page</a></li>
+            <ul style="padding-left: 20px; margin: 0;">
+                <li><a href="#merge-users">"Merge Users" button</a></li>
+                <li><a href="#merge-animes">"Merge Animes" button</a></li>
+                <li><a href="#limit">"Limit" button</a></li>
+                <li><a href="#update">"Update" button</a></li>
+                <li><a href="#include-nsfw">"Include NSFW" checkbox</a></li>
+            </ul>
+            <li><a href="#search-page">Search Page</a></li>
+            <ul style="padding-left: 20px; margin: 0;">
+                <li><a href="#sidebar">Sidebar</a></li>
+                <li><a href="#search-bar-guide">Search bar</a></li>
+                <li><a href="#submit-ratings">"Submit Ratings" button</a></li>
+                <li><a href="#send-updates-to-the-top">"Send updates to the top" checkbox</a></li>
+                <li><a href="#exclude-animes-from-your-list">"Exclude animes from your list" checkbox</a></li>
+            </ul>
+        </ul>
+    </ul>
+</aside>
+
+{% endblock %}
+
+{% block main %}
+<div class="guide-container">
+    <h1 class="guide-title">Guide</h1>
+
+    <section class="guide-section">
+        <h3 class="guide-section-title" id="introduction">- Introduction -</h3>
+        <p class="guide-section-description">
+            <strong>"Your Anime List"</strong> is a web app designed to solve the age-old problem of finding great anime to watch. 
+            Instead of browsing random recommendation sites or relying on Reddit threads, 
+            this app uses a custom algorithm to provide you with personalized suggestions.
+        </p>
+        <p class="guide-section-description">
+            You'll also have tools to fine-tune the results to match your preferences (which I'm going to explain in this guide).
+            Whether you're looking for something specific or just open to recommendations, this app aims to improve your 
+            anime-watching experience.
+        </p>
+        <p class="guide-section-description">
+            While this app may not solve all your problems, it's a step towards a future world where everyone has something great to watch. 
+            I'm always open to feedback—if you have suggestions or think something could be improved, let me know!
+        </p>
+        <p class="guide-section-description">
+            Thank you for using "Your Anime List"!
+        </p>
+        
+        <div class="guide-subtopic">
+            <h3 class="guide-section-title" id="recommendations-page">- Recommendations page -</h3>
+            <p class="guide-section-description">
+                This is the main page, the one you land when you first enter the app (after all the paperwork). This is where you can find
+                your statistics and the anime recommendations the algorithm provides you. There are some tools to play around with, so make sure
+                you read how to use them (the buttons are fake if you are wondering).
+            </p>
+
+            <ol class="guide-section-description">
+                <li>
+                    <p id="merge-users"><strong>"Merge Users" button:</strong></p>
+                    <p>
+                        The "Merge Users" button is a feature that works when you're logged in to the app (not MyAnimeList). 
+                        It allows you to merge your anime list with other users' lists to get recommendations based
+                        on the combined preferences of you and your friends. This is a great way to discover anime 
+                        that matches the tastes of your entire group!
+                    </p>
+                    <p>
+                        To use it, simply ask your friends for their user IDs, which you can enter separated by commas.
+                        The app will then create recommendations considering all of the included users' likes (you do not need to enter yours).
+                    </p>
+
+                    <p class="guide-examples-container">
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Enter up to 10 User IDs" maxlength="100" required style="border-radius: 20px;">
+                        <button id="search-button">Merge Users</button>
+                    </p>
+                </li>
+                <li>
+                    <p id="merge-animes"><strong>"Merge Animes" button:</strong></p>
+                    <p>
+                        As the name suggests, the "Merge Animes" button allows you to merge specific anime IDs for more targeted recommendations. 
+                        If you want personalized suggestions based on specific shows, this is the tool you need!
+                    </p>
+                    <p>
+                        To use it, simply search for the anime IDs (either through the anime search page or manually, since the IDs are the same as MAL), and enter them separated by commas.
+                        The app will then provide recommendations centered around the shows you selected. 
+                    </p>
+                    <p class="select-form guide-examples-container">
+                        <input type="text" min="1" max="1200" placeholder="Enter Anime IDs" style="width: 180px;" required>
+                        <button>Merge Animes</button>
+                    </p>
+                </li>
+                <li>
+                    <p id="limit"><strong>"Limit" button:</strong></p>
+                    <p>
+                        The "Limit" button allows you to focus your recommendations based on your most recently completed anime. 
+                        It limits the number of completed shows used for recommendations, starting from the most recent and working backwards. 
+                        This is especially useful if you want recommendations based only on your latest watches. 
+                    </p>
+                    <p>
+                        To use it, just enter a number. There is no limit! (no pun intended).
+                    </p>
+                    <p class="guide-examples-container limit-form">
+                        <input type="number" id="limit" min="1" max="1000" value="20" required>
+                        <button>Limit</button>
+                    </p>
+                </li>
+                <li>
+                    <p id="update"><strong>"Update" button:</strong></p>
+                    <p>
+                        To fully grasp how this button works, we’d need to dive into some technical details. 
+                        But, simply put: the page doesn’t constantly refresh your anime list in real-time. Instead, 
+                        it modifies a local list to keep things running smoothly. So, if you've added shows outside 
+                        the app, want to refresh your recommendations, or update the list that will be used for recommendations
+                        with your friends, you'll need to use the "Update" button.
+                    </p>
+                    <p>
+                        To use it, just press it!
+                    </p>
+                    <p class="guide-examples-container limit-form">
+                        <button>Update</button>
+                    </p>
+                </li>
+                <li>
+                    <p id="include-nsfw"><strong>"Include NSFW" checkbox:</strong></p>
+                    <p>
+                        While testing the app, I encountered a significant amount of... interesting recommendations. 
+                        The algorithm usually filters most of these out based on your anime list, but occasionally, 
+                        some sneak through. This option is disabled by default, so if you're looking to unlock some 
+                        extra content and reach the pearly gates, you should check this box every time you update something.
+                    </p>
+                    <p>
+                        To use it, just check it!
+                    </p>
+                    <p class="form-check mr-sm-2 guide-examples-container">
+                        <input id="nsfw-checkbox" class="form-check-input" type="checkbox">
+                        <label class="form-check-label" for="nsfw-checkbox" style="color: #272727; font-family:'Times New Roman', Times, serif;">Include NSFW</label>
+                        <span id="lenny-face" style="display: none; margin-left: 10px; font-family: Arial; color: #3d3d3d">( ͡° ͜ʖ ͡°)</span>
+                    </p>
+                </li>
+            </ol>
+        </div>
+
+        <div class="guide-subtopic">
+            <h3 class="guide-section-title">
+                <button class="how-it-works-toggle" onclick="toggleDetails('how-it-works-details-1')">
+                    How it works
+                </button>
+            </h3>
+            <div id="how-it-works-details-1" class="how-it-works-details" style="display: none;">
+                <p class="guide-section-description">
+                    I'm lazy and I will give details someday.
+                </p>
+            </div>
+        </div>
+
+        <div class="guide-subtopic">
+            <h3 class="guide-section-title" id="search-page">Search page</h3>
+            <p class="guide-section-description">
+                The search page is the one that nearly made me pull my hair out.
+                It's a (decently) powerful tool that connects to your MyAnimeList account,
+                allowing you to modify your list directly. It comes with some useful features and more checkboxes,
+                so let's dive in and explore how it all works.
+            </p>
+
+            <ol class="guide-section-description">
+                <li>
+                    <p id="sidebar"><strong>Sidebar:</strong></p>
+                    <p>
+                        On the left side of the screen, you'll see two things: a submit button and a (potentially empty) space.
+                        This is where all the animes you've marked as "completed" but forgot to score will show up. 
+                        So you can finally take them out from the sad unrated list.
+                    </p>
+                    <p>
+                        To use it, simply rate and press the buttons to change the anime you are on, and when
+                        you finish, press the "Submit" button.
+                    </p>
+                    <p>
+                        <div class="pagination2">
+                            <button>Previous</button>
+                            <button>Next</button>
+                        </div>
+                    </p>
+                </li>
+                <li>
+                    <p id="search-bar-guide"><strong>Search bar:</strong></p>
+                    <p>
+                        The search bar is where you can search for animes. Pretty straight forward, right? But it has some
+                        cool features to find specific animes (or just to play around). If you are not going to use them, you are free
+                        to skip this part: 
+                    </p>
+                    <p>
+                        There are different commands to search for specific animes, that can be combined. All of them need to be 
+                        separated by a comma, not repeated or separated by spaces (except for the studios). All of them have a name followed
+                        by a colon. Let's see some examples:
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Search by name:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value="Demon Slayer (as simple as that!)">
+                        <button id="search-button">Search</button> 
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Search by ID:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value='id:2763 (now we use "id:")'>
+                        <button id="search-button">Search</button> 
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Search by episodes:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value='episodes:12 (I think you get it)'>
+                        <button id="search-button">Search</button> 
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Search by studio:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value='studio: Wit Studio (you can use spaces here)'>
+                        <button id="search-button">Search</button> 
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Search by year:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value='year:1999'>
+                        <button id="search-button">Search</button> 
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Search by score:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value='score:>=5 (you can play with these!)'>
+                        <button id="search-button">Search</button> 
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Sort by scores:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value='desc:scores - asc:scores'>
+                        <button id="search-button">Search</button> 
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Sort by year:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value='desc:year - asc:year'>
+                        <button id="search-button">Search</button> 
+                    </p>
+                    <p>
+                        As you can see, this tool allows you to get specific animes if you want to. Something that is not showed in the examples,
+                        is that you can combine these. Try to look this up in the search page!
+                    </p>
+                    <p class="guide-examples-container">
+                        <strong style="margin-right: 20px; font-size: 18px; color: #3d3d3d;">- Combine them:</strong>  
+                        <input type="text" id="search-bar" class="form-control mr-sm-2" placeholder="Search anime..." value='B, studio:sugar boy, score:4'>
+                        <button id="search-button">Search</button> 
+                    </p>
+                </li>
+                <li>
+                    <p id="submit-ratings"><strong>"Submit ratings" button:</strong></p>
+                    <p>
+                        The "Submit Ratings" button allows you to submit your ratings for animes, 
+                        whether you searched for them or just rated them. The more animes you rate, the longer it may take, 
+                        so be patient!
+                    </p>
+                    <p>
+                        It will only process the animes where you've given both a rating and a status. 
+                        If you only provide a score, the app will assume the status is "completed."
+                    </p>
+                    <p>
+                        To use it, just press it! (and wait).
+                    </p>
+                    <p class="guide-examples-container">
+                        <button type="submit" class="submit-ratings">Submit Ratings</button>
+                    </p>        
+                </li>
+                <li>
+                    <p id="send-updates-to-the-top"><strong>"Send updates to the top" checkbox:</strong></p>
+                    <p>
+                        This checkbox works with the server to update your list locally. 
+                        Because if you press the "Update" button on the main page, all changes will be overwritten by 
+                        your most recent MyAnimeList updates. So, what's the point of this checkbox?
+                    </p>
+                    <p>
+                        When checked, it treats the animes as if they were updated just now. 
+                        Since the recommendation algorithm sorts animes based on the date of the update, 
+                        checking this box will ensure buttons like "Limit" include these animes in the results. 
+                        If it's turned off, the newly added animes will be placed at the bottom of the list, meaning 
+                        they won’t be factored into the algorithm if you limit your list size.
+                    </p>
+                    <p class="form-check mr-sm-2 guide-examples-container">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label" style="color: #272727; font-family:'Times New Roman', Times, serif;">Send updates to the top</label>
+                    </p>
+                </li>
+                <li>
+                    <p id="exclude-animes-from-your-list"><strong>"Exclude animes from your list" checkbox:</strong></p>
+                    <p>
+                        This checkbox is turned off by default and allows you to exclude animes that are already in your list, 
+                        regardless of their status. So, if you've already added certain animes, they won't appear when this 
+                        checkbox is checked.
+                    </p>
+                    <p class="form-check mr-sm-2 guide-examples-container">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label" style="color: #272727; font-family:'Times New Roman', Times, serif;">Exclude animes from your list</label>
+                    </p>
+                </li>
+            </ol>
+        </div>
+
+        <div class="guide-subtopic">
+            <h3 class="guide-section-title">
+                <button class="how-it-works-toggle" onclick="toggleDetails('how-it-works-details-2')">
+                    How it works
+                </button>
+            </h3>
+            <div id="how-it-works-details-2" class="how-it-works-details" style="display: none;">
+                <p class="guide-section-description">
+                    Advanced explanation of how the search works.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+function toggleDetails(id) {
+    var details = document.getElementById(id);
+    if (details.style.display === "none") {
+        details.style.display = "block";
+    } else {
+        details.style.display = "none";
+    }
+}
+
+document.getElementById('nsfw-checkbox').addEventListener('change', function() {
+        var lennyFace = document.getElementById('lenny-face');
+        if (this.checked) {
+            lennyFace.style.display = 'inline'; // Show Lenny face
+        } else {
+            lennyFace.style.display = 'none'; // Hide Lenny face
+        }
+    });
+</script>
+{% endblock %}

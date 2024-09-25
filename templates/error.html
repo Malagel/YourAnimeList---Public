@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="error-container">
+    <h1 class="error-message">{{ error }}</h1>
+    <a href="{{ url_for('index') }}" class="back-button" style="outline: none;">Go to Homepage</a>
+</div>
+{% endblock %}
