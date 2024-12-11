@@ -1,6 +1,9 @@
 # Your Anime List
 ### Description: web application that uses the MyAnimeList service to give the user personalized recommendations.
 
+Current link: https://your-anime-list.onrender.com/
+(The server where it's hosted takes a while to startup since it's a free tier)
+
 "Your Anime List" is a an application that provides personalized anime recommendations using a vector-based algorithm. It leverages two databases: one for managing user data and another for fetching detailed anime information. The app offers a variety of features, including the ability to merge your anime lists with friends, limit recommendations by specific anime IDs or custom parameters, access in-depth statistics, and search the anime database using advanced filters. Let’s explore each feature in detail.
 
 ### The algorithm:
